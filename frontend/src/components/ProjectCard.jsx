@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 import { auth } from '../utils/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 
@@ -26,7 +26,7 @@ const ProjectCard = ({ project, isTrending, onDelete }) => {
             if (!user) return;
             try {
                 const token = await user.getIdToken();
-                const res = await axios.get('http://localhost:5001/api/auth/bookmarks', {
+                const res = await api.get('/auth/bookmarks', {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 const projectIds = res.data.bookmarks?.map((bookmark) => bookmark._id);
@@ -42,7 +42,7 @@ const ProjectCard = ({ project, isTrending, onDelete }) => {
         if (!user) return alert('Please login to bookmark');
         try {
             const token = await user.getIdToken();
-            await axios.post(`http://localhost:5001/api/auth/bookmark/${project._id}`, {}, {
+            await api.post(`/auth/bookmark/${project._id}`, {}, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             setBookmarked(!bookmarked);
@@ -59,7 +59,7 @@ const ProjectCard = ({ project, isTrending, onDelete }) => {
         if (!user) return alert('Please login to like projects');
         try {
             const token = await user.getIdToken();
-            const res = await axios.post(`http://localhost:5001/api/projects/${project._id}/like`, {}, {
+            const res = await api.post(`/projects/${project._id}/like`, {}, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setLiked(res.data.liked);

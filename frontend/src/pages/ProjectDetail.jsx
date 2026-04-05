@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../utils/api';
 import { motion } from 'framer-motion';
 import { auth } from '../utils/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -25,14 +25,14 @@ const ProjectDetail = () => {
     useEffect(() => {
         const fetchProject = async () => {
             try {
-                const res = await axios.get(`http://localhost:5001/api/projects/${id}`);
+                const res = await api.get(`/projects/${id}`);
                 setProject(res.data);
                 setLikeCount(res.data.likes?.length || 0);
             } catch (error) { console.error(error); }
         };
         const fetchComments = async () => {
             try {
-                const res = await axios.get(`http://localhost:5001/api/projects/${id}/comments`);
+                const res = await api.get(`/projects/${id}/comments`);
                 setComments(res.data);
             } catch (error) { console.error(error); } finally { setLoading(false); }
         };
@@ -51,7 +51,7 @@ const ProjectDetail = () => {
         if (!user) return alert('Please login to like this project.');
         try {
             const token = await user.getIdToken();
-            const res = await axios.post(`http://localhost:5001/api/projects/${id}/like`, {}, {
+            const res = await api.post(`/projects/${id}/like`, {}, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             setLiked(res.data.liked);
@@ -64,11 +64,11 @@ const ProjectDetail = () => {
         if (!user || !newComment.trim()) return;
         try {
             const token = await user.getIdToken();
-            await axios.post(`http://localhost:5001/api/projects/${id}/comments`, { text: newComment }, {
+            await api.post(`/projects/${id}/comments`, { text: newComment }, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             setNewComment('');
-            const res = await axios.get(`http://localhost:5001/api/projects/${id}/comments`);
+            const res = await api.get(`/projects/${id}/comments`);
             setComments(res.data);
         } catch (error) { console.error(error); }
     };
@@ -77,7 +77,7 @@ const ProjectDetail = () => {
         if (!user) return alert('Please login to bookmark this project.');
         try {
             const token = await user.getIdToken();
-            await axios.post(`http://localhost:5001/api/auth/bookmark/${id}`, {}, {
+            await api.post(`/auth/bookmark/${id}`, {}, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             setBookmarked(!bookmarked);
@@ -89,7 +89,7 @@ const ProjectDetail = () => {
             if (!user) return;
             try {
                 const token = await user.getIdToken();
-                const res = await axios.get('http://localhost:5001/api/auth/bookmarks', {
+                const res = await api.get('/auth/bookmarks', {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 const projectIds = res.data.bookmarks?.map((bookmark) => bookmark._id);

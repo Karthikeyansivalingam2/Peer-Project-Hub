@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
+import api from '../utils/api';
 import { motion } from 'framer-motion';
 import { auth } from '../utils/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -28,7 +28,7 @@ const EditProject = () => {
   useEffect(() => {
     const fetchProject = async () => {
       try {
-        const res = await axios.get(`http://localhost:5001/api/projects/${id}`);
+        const res = await api.get(`/projects/${id}`);
         const project = res.data;
         setTitle(project.title || '');
         setDescription(project.description || '');
@@ -57,8 +57,8 @@ const EditProject = () => {
     setLoading(true);
     try {
       const token = await user.getIdToken();
-      await axios.put(
-        `http://localhost:5001/api/projects/${id}`,
+      await api.put(
+        `/projects/${id}`,
         {
           title,
           description,

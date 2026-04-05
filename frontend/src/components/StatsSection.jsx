@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 
@@ -10,7 +10,7 @@ const StatsSection = () => {
     useEffect(() => {
         const fetchStats = async () => {
             try {
-                const res = await axios.get('http://localhost:5001/api/projects/stats');
+                const res = await api.get('/projects/stats');
                 setStats(res.data);
             } catch (error) {
                 console.error('Error fetching stats:', error);

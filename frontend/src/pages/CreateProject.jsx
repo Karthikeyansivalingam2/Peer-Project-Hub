@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../utils/api';
 import { motion } from 'framer-motion';
 import { auth } from '../utils/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -26,7 +26,7 @@ const CreateProject = () => {
         setLoading(true);
         try {
             const token = await user.getIdToken();
-            await axios.post('http://localhost:5001/api/projects', {
+            await api.post('/projects', {
                 title,
                 description,
                 tags: tags.split(',').map(tag => tag.trim()).filter(tag => tag),

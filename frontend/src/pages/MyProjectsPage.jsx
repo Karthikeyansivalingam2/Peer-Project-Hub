@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth } from '../utils/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
-import axios from 'axios';
+import api from '../utils/api';
 import ProjectCard from '../components/ProjectCard';
 
 const MyProjectsPage = () => {
@@ -27,7 +27,7 @@ const MyProjectsPage = () => {
   const fetchMyProjects = async (uid) => {
     setLoading(true);
     try {
-      const res = await axios.get(`http://localhost:5001/api/projects/user/${uid}`);
+      const res = await api.get(`/projects/user/${uid}`);
       setProjects(res.data);
     } catch (err) {
       console.error(err);
@@ -38,7 +38,7 @@ const MyProjectsPage = () => {
 
   const handleDelete = async (projectId) => {
     try {
-      await axios.delete(`http://localhost:5001/api/projects/${projectId}`);
+      await api.delete(`/projects/${projectId}`);
       setProjects((current) => current.filter((project) => project._id !== projectId));
     } catch (err) {
       console.error(err);

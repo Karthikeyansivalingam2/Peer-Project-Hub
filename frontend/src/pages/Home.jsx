@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useEffect, useState } from 'react';
+import api from '../utils/api';
 import { motion, AnimatePresence } from 'framer-motion';
 import HeroSection from '../components/HeroSection';
 import SearchBar from '../components/SearchBar';
@@ -17,7 +17,7 @@ const Home = () => {
         const fetchProjects = async () => {
             setLoading(true);
             try {
-                const res = await axios.get(`http://localhost:5001/api/projects?page=${page}&limit=6`);
+                const res = await api.get(`/projects?page=${page}&limit=6`);
                 setProjects(res.data.projects);
                 setTotalPages(res.data.totalPages);
             } catch (err) {

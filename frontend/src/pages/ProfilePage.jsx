@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth } from '../utils/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
-import axios from 'axios';
+import api from '../utils/api';
 import { motion, AnimatePresence } from 'framer-motion';
 import ProjectCard from '../components/ProjectCard';
 
@@ -35,10 +35,10 @@ const ProfilePage = () => {
         try {
             const token = await currentUser.getIdToken();
             const [profileRes, projectsRes] = await Promise.all([
-                axios.get('http://localhost:5001/api/auth/profile', {
+                api.get('/auth/profile', {
                     headers: { Authorization: `Bearer ${token}` }
                 }),
-                axios.get(`http://localhost:5001/api/projects/user/${currentUser.uid}`)
+                api.get(`/projects/user/${currentUser.uid}`)
             ]);
             
             setDbUser(profileRes.data);
@@ -58,7 +58,7 @@ const ProfilePage = () => {
         setError('');
         try {
             const token = await user.getIdToken();
-            const res = await axios.put('http://localhost:5001/api/auth/profile', 
+            const res = await api.put('/auth/profile', 
                 { name: editName, bio: editBio },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -75,7 +75,7 @@ const ProfilePage = () => {
     const handleDelete = async (projectId) => {
         try {
             const token = await user.getIdToken();
-            await axios.delete(`http://localhost:5001/api/projects/${projectId}`, {
+            await api.delete(`/projects/${projectId}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setProjects((current) => current.filter((p) => p._id !== projectId));

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 import { motion, AnimatePresence } from 'framer-motion';
 import ProjectCard from '../components/ProjectCard';
 import { auth } from '../utils/firebase';
@@ -20,7 +20,7 @@ const BookmarksPage = () => {
             if (!user) return;
             try {
                 const token = await user.getIdToken();
-                const res = await axios.get('http://localhost:5001/api/auth/bookmarks', {
+                const res = await api.get('/auth/bookmarks', {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 setBookmarks(res.data.bookmarks || []);

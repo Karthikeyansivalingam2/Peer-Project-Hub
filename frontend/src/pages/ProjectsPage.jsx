@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../utils/api';
 import SearchBar from '../components/SearchBar';
 import ProjectCard from '../components/ProjectCard';
 
@@ -14,7 +14,7 @@ const ProjectsPage = () => {
     useEffect(() => {
         const fetchProjects = async () => {
             try {
-                const res = await axios.get('http://localhost:5001/api/projects');
+                const res = await api.get('/projects');
                 // Backend returns { projects, ... }
                 const projectData = res.data.projects || res.data;
                 setProjects(projectData);

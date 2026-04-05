@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../utils/firebase';
-import axios from 'axios';
+import api from '../utils/api';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -23,7 +23,7 @@ const Login = () => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-      await axios.post('http://localhost:5001/api/auth/register', {
+      await api.post('/auth/register', {
         email: user.email,
         firebaseUid: user.uid,
         name: user.displayName || ''
